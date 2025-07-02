@@ -35,9 +35,7 @@ export function Dashboard() {
         <LastTasks />
       </div>
 
-      <div className="p-5 bg-violet-300 h-screen flex items-center justify-center">
-        CHAT
-      </div>
+      <div className="p-5  h-screen flex items-center justify-center">CHAT</div>
     </div>
   );
 }

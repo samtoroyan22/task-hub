@@ -1,6 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import { useMemo } from "react";
 import cn from "clsx";
+import { motion } from "framer-motion";
 
 interface Props {
   progress: number;
@@ -8,6 +9,7 @@ interface Props {
 
 export function ProgressBar({ progress }: Props) {
   const clamped = Math.min(100, Math.max(0, progress));
+
   const progressText = useMemo(() => {
     if (clamped >= 100)
       return (
@@ -29,21 +31,23 @@ export function ProgressBar({ progress }: Props) {
 
   return (
     <div className="w-full h-12 rounded-full bg-primary/12 overflow-hidden relative">
-      <div
+      <motion.div
         className={cn(
-          `h-full animate-stripes cursor-default rounded-full 
+          `h-full cursor-default rounded-full 
           bg-[length:56px_56px] text-white font-medium 
-          flex items-center justify-center`,
+          flex items-center justify-center animate-stripes`,
           colorProgressBar
         )}
+        initial={{ width: 0 }}
+        animate={{ width: `${clamped}%` }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
         style={{
-          width: `${clamped}%`,
           backgroundImage: `repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 0, 
               rgba(255, 255, 255, 0.15) 20px, transparent 20px, transparent 40px)`,
         }}
       >
         {progressText}
-      </div>
+      </motion.div>
     </div>
   );
 }
