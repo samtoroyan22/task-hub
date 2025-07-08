@@ -23,9 +23,9 @@ export function ProgressBar({ progress }: Props) {
 
   const colorProgressBar = useMemo(() => {
     if (clamped >= 100) return "bg-emerald-500";
-    if (clamped >= 75) return "bg-amber-400";
-    if (clamped >= 50) return "bg-primary";
-    if (clamped >= 25) return "bg-rose-400";
+    if (clamped >= 75) return "bg-primary";
+    if (clamped >= 50) return "bg-amber-400";
+    if (clamped >= 0) return "bg-rose-400";
     return "bg-neutral-300";
   }, [clamped]);
 
@@ -35,8 +35,9 @@ export function ProgressBar({ progress }: Props) {
         className={cn(
           `h-full cursor-default rounded-full 
           bg-[length:56px_56px] text-white font-medium 
-          flex items-center justify-center animate-stripes`,
-          colorProgressBar
+          flex items-center justify-center`,
+          colorProgressBar,
+          { "animate-stripes": clamped < 100 }
         )}
         initial={{ width: 0 }}
         animate={{ width: `${clamped}%` }}

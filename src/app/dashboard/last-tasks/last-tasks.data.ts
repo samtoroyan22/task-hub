@@ -1,12 +1,11 @@
 import type { ITask } from "@/types/task.types";
-import { Plane, ShoppingBasket, TabletSmartphone } from "lucide-react";
 import { USERS } from "../data/users.data";
 
 export const TASKS: ITask[] = [
   {
     id: "1",
     title: "Travel App User Flow",
-    icon: Plane,
+    icon: "Plane",
     dueDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),
     comments: ["Cool!", "Awesome", "Well done!"],
     resources: ["", "", "", "", "", ""],
@@ -22,7 +21,7 @@ export const TASKS: ITask[] = [
   {
     id: "2",
     title: "E-commerce Site Redesign",
-    icon: ShoppingBasket,
+    icon: "ShoppingBasket",
     dueDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
     comments: ["Let's improve SEO", "Love the color palette"],
     resources: ["", "", "", ""],
@@ -37,7 +36,7 @@ export const TASKS: ITask[] = [
   {
     id: "3",
     title: "Mobile App Onboarding",
-    icon: TabletSmartphone,
+    icon: "TabletSmartphone",
     dueDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
     comments: ["Needs animations", "Add progress bar"],
     resources: ["", "", ""],

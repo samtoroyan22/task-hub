@@ -7,11 +7,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/utils";
 import { Button } from "@/components/ui/button";
-
-interface Props {
-  status: TTaskStatus | null;
-  setStatus: (status: TTaskStatus | null) => void;
-}
+import { observer } from "mobx-react-lite";
+import { taskStore } from "@/stores/task.store";
 
 const statuses: Array<TTaskStatus | "all"> = [
   "all",
@@ -20,7 +17,8 @@ const statuses: Array<TTaskStatus | "all"> = [
   "completed",
 ];
 
-export function LastTasksFilter({ status, setStatus }: Props) {
+export const LastTasksFilter = observer(() => {
+  const currentStatus = taskStore.status;
   return (
     <div>
       <DropdownMenu>
@@ -29,7 +27,7 @@ export function LastTasksFilter({ status, setStatus }: Props) {
             variant="outline"
             className="capitalize bg-white hover:bg-white/70"
           >
-            {status?.replace("-", " ") || "All"}
+            {currentStatus?.replace("-", " ") || "All"}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -37,10 +35,10 @@ export function LastTasksFilter({ status, setStatus }: Props) {
             <DropdownMenuItem
               key={taksStatus}
               onClick={() =>
-                setStatus(taksStatus === "all" ? null : taksStatus)
+                taskStore.setStatus(taksStatus === "all" ? null : taksStatus)
               }
               className={cn(
-                status === taksStatus ? "font-bold" : "",
+                currentStatus === taksStatus ? "font-bold" : "",
                 "cursor-pointer capitalize transition-colors dark:hover:bg-neutral-700/70"
               )}
             >
@@ -51,4 +49,4 @@ export function LastTasksFilter({ status, setStatus }: Props) {
       </DropdownMenu>
     </div>
   );
-}
+});

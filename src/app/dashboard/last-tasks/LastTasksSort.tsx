@@ -6,19 +6,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/utils";
-
-interface Props {
-  sortByDueDate: TTaskSortBy;
-  setSortByDueDate: (value: TTaskSortBy) => void;
-}
+import { observer } from "mobx-react-lite";
+import { taskStore } from "@/stores/task.store";
 
 const sortTypes: Array<TTaskSortBy> = ["asc", "desc"];
 
-export function LastTasksSort({ sortByDueDate, setSortByDueDate }: Props) {
+export const LastTasksSort = observer(() => {
   return (
     <div className="">
-      <Select defaultValue={sortByDueDate} onValueChange={setSortByDueDate}>
+      <Select
+        defaultValue={taskStore.sortByDueDate}
+        onValueChange={(value: TTaskSortBy) =>
+          taskStore.setSortByDueDate(value)
+        }
+      >
         <SelectTrigger className="w-[180px] bg-white hover:bg-white/70">
           <SelectValue placeholder="Sort by due date" />
         </SelectTrigger>
@@ -32,4 +33,4 @@ export function LastTasksSort({ sortByDueDate, setSortByDueDate }: Props) {
       </Select>
     </div>
   );
-}
+});

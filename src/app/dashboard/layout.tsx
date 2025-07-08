@@ -1,7 +1,11 @@
 import { Sidebar } from "@/components/layout/sidebar/Sidebar";
-import type { PropsWithChildren, ReactNode } from "react";
+import type { ReactNode } from "react";
 
-export default function DashboardLayout({ children }: PropsWithChildren) {
+interface Props {
+  children: ReactNode;
+}
+
+export default function DashboardLayout({ children }: Props) {
   return (
     <div className="grid grid-cols-[250px_1fr] h-screen">
       <Sidebar />
