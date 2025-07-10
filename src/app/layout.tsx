@@ -1,4 +1,4 @@
-import { SITE_NAME } from "@/constants";
+import { SITE_NAME } from "@/constants/index";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";

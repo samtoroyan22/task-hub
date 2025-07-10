@@ -1,12 +1,18 @@
 import type { ITask } from "@/types/task.types";
 import { USERS } from "../data/users.data";
+import { setHours, setMinutes } from "date-fns";
 
 export const TASKS: ITask[] = [
   {
     id: "1",
     title: "Travel App User Flow",
     icon: "Plane",
-    dueDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),
+    color: "bg-violet-400",
+    dueDate: {
+      date: new Date(),
+      startTime: setMinutes(setHours(new Date(), 9), 30),
+      endTime: setMinutes(setHours(new Date(), 11), 30),
+    },
     comments: ["Cool!", "Awesome", "Well done!"],
     resources: ["", "", "", "", "", ""],
     links: ["https://example.com", "https://example.com"],
@@ -22,7 +28,12 @@ export const TASKS: ITask[] = [
     id: "2",
     title: "E-commerce Site Redesign",
     icon: "ShoppingBasket",
-    dueDate: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
+    color: "bg-pink-400",
+    dueDate: {
+      date: new Date(),
+      startTime: setMinutes(setHours(new Date(), 13), 0),
+      endTime: setMinutes(setHours(new Date(), 15), 30),
+    },
     comments: ["Let's improve SEO", "Love the color palette"],
     resources: ["", "", "", ""],
     links: ["https://redesign.example.com"],
@@ -37,7 +48,10 @@ export const TASKS: ITask[] = [
     id: "3",
     title: "Mobile App Onboarding",
     icon: "TabletSmartphone",
-    dueDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+    color: "bg-yellow-400",
+    dueDate: {
+      date: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
+    },
     comments: ["Needs animations", "Add progress bar"],
     resources: ["", "", ""],
     links: ["https://onboarding.example.com"],

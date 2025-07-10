@@ -132,11 +132,10 @@ html {
 html,
 body {
   font-family: var(--font-sans), sans-serif;
+  height: 100%;
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
   min-width: 320px;
   min-height: 100vh;
 }

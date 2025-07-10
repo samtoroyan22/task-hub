@@ -27,6 +27,7 @@ import { ICON_MAP, ICON_NAMES } from "@/utils/icon-map";
 import { taskStore } from "@/stores/task.store";
 import { observer } from "mobx-react-lite";
 import { toast } from "sonner";
+import { z } from "zod";
 
 interface Props {
   id: string;
@@ -45,7 +46,7 @@ export const TaskEditModal = observer(({ id, title, onClose }: Props) => {
     });
   }, [id]);
 
-  const form = useForm<TTaskFormData>({
+  const form = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
     defaultValues: { title: title, dueDate: undefined, icon: undefined },
   });

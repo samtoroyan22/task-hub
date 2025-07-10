@@ -10,16 +10,20 @@ import {
 import Image from "next/image";
 import { ProgressBar } from "../ProgressBar";
 import { TaskEditModal } from "./TaskEditModal";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ICON_MAP } from "@/utils/icon-map";
 import { SubTaskCreateModal } from "@/app/dashboard/last-tasks/create-sub-task/SubTaskCreateModal";
 import { observer } from "mobx-react-lite";
+import { format, isToday } from "date-fns";
+import { cn } from "@/utils";
 
 interface Props {
   task: ITask;
+  isColor?: boolean;
+  isMinimal?: boolean;
 }
 
-export const Task = observer(({ task }: Props) => {
+export const Task = observer(({ task, isColor, isMinimal }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const progress = Math.round(
@@ -30,20 +34,54 @@ export const Task = observer(({ task }: Props) => {
 
   const Icon = ICON_MAP[task.icon];
 
+  const dueDate = useMemo(
+    () =>
+      isToday(task.dueDate.date)
+        ? "Today"
+        : Math.ceil((+task.dueDate.date - Date.now()) / (1000 * 60 * 60 * 24)) +
+          " days",
+    [task.dueDate.date]
+  );
+
   return (
-    <div className="bg-card p-3.5 rounded-xl">
-      <div className="mb-3 flex items-start justify-between">
+    <div
+      className={cn(
+        "bg-card p-3.5 rounded-xl",
+        isColor && task.color,
+        isColor && "text-white"
+      )}
+    >
+      <div
+        className={cn(
+          "mb-3 flex items-start justify-between",
+          isMinimal && "flex-col gap-3 mb-0"
+        )}
+      >
         <div className="flex items-start gap-3">
-          <div className="bg-primary/10 p-2 rounded-full flex items-center justify-center">
+          <div
+            className={cn(
+              "bg-primary/10 p-2 rounded-full flex items-center justify-center",
+              isColor && "text-primary bg-white"
+            )}
+          >
             {task.icon && <Icon className="text-purple-600" />}
           </div>
-          <div className="w-32">
+          <div className={cn(!isMinimal && "w-32")}>
             <span className="font-medium leading-snug wrap-normal opacity-90">
               {task.title}
             </span>
             <div>
-              <span className="text-sm opacity-50">
-                Due: {task.dueDate.toLocaleDateString()}
+              <span
+                className={cn("text-sm opacity-50", isColor && "opacity-75")}
+              >
+                {isMinimal ? (
+                  <>
+                    {format(task.dueDate.startTime!, "h:m a")} -{" "}
+                    {format(task.dueDate.endTime!, "h:m a")}
+                  </>
+                ) : (
+                  <>Due: {dueDate}</>
+                )}
               </span>
             </div>
           </div>
@@ -63,40 +101,53 @@ export const Task = observer(({ task }: Props) => {
         </div>
       </div>
 
-      <div className="mb-4">
-        <ProgressBar progress={progress} />
-      </div>
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1 text-sm">
-            <MessageSquareMore className="opacity-40" size={20} />
-            {task.comments.length}
-          </span>
-          <span className="flex items-center gap-1 text-sm">
-            <LucideImage className="opacity-40" size={20} />
-            {task.subTasks.length}
-          </span>
-          <span className="flex items-center gap-1 text-sm">
-            <Link className="opacity-40" size={20} />
-            {task.links.length}
-          </span>
+      {!isMinimal && (
+        <div className="mb-4">
+          <ProgressBar progress={progress} />
         </div>
+      )}
 
-        <div className="flex items-center gap-2">
-          <SubTaskCreateModal
-            taskId={task.id}
-            onClose={() => setIsModalOpen(false)}
-          />
+      {!isMinimal && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-sm">
+              <MessageSquareMore
+                className={isColor ? "opacity-80" : "opacity-80"}
+                size={20}
+              />
+              {task.comments.length}
+            </span>
+            <span className="flex items-center gap-1 text-sm">
+              <LucideImage
+                className={isColor ? "opacity-80" : "opacity-40"}
+                size={20}
+              />
+              {task.subTasks.length}
+            </span>
+            <span className="flex items-center gap-1 text-sm">
+              <Link
+                className={isColor ? "opacity-80" : "opacity-40"}
+                size={20}
+              />
+              {task.links.length}
+            </span>
+          </div>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-white dark:bg-primary/10 border-1 border-primary text-primary p-2 rounded-full hover:bg-primary/20 dark:hover:bg-primary/25 transition-colors"
-          >
-            <Edit2 size={15} />
-          </button>
+          <div className="flex items-center gap-2">
+            <SubTaskCreateModal
+              taskId={task.id}
+              onClose={() => setIsModalOpen(false)}
+            />
+
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-white dark:bg-primary/10 border-1 border-primary text-primary p-2 rounded-full hover:bg-primary/20 dark:hover:bg-primary/25 transition-colors"
+            >
+              <Edit2 size={15} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {isModalOpen && (
         <TaskEditModal

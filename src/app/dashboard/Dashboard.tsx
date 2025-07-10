@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { ProjectStats } from "./project-stats/ProjectStats";
 import { ProjectStatisticChart } from "./project-chart/ProjectStatisticChart";
 import { LastTasks } from "./last-tasks/LastTasks";
+import { TasksTimeline } from "@/components/tasks-timeline/TasksTimeline";
 
 const DynamicThemeToggle = dynamic(
   () =>
@@ -33,6 +34,8 @@ export function Dashboard() {
         </div>
 
         <LastTasks />
+
+        <TasksTimeline />
       </div>
 
       <div className="p-5  h-screen flex items-center justify-center">CHAT</div>
