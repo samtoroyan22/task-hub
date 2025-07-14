@@ -41,7 +41,7 @@ export const TaskEditModal = observer(({ id, title, onClose }: Props) => {
     if (!task) return;
     form.reset({
       title: task.title,
-      dueDate: new Date(task.dueDate),
+      dueDate: new Date(task.dueDate.date),
       icon: task.icon,
     });
   }, [id]);

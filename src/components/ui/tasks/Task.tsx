@@ -48,7 +48,7 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
       className={cn(
         "bg-card p-3.5 rounded-xl",
         isColor && task.color,
-        isColor && "text-white"
+        isColor && "text-foreground"
       )}
     >
       <div
@@ -61,7 +61,7 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
           <div
             className={cn(
               "bg-primary/10 p-2 rounded-full flex items-center justify-center",
-              isColor && "text-primary bg-white"
+              isColor && "text-primary bg-card"
             )}
           >
             {task.icon && <Icon className="text-purple-600" />}
@@ -112,7 +112,7 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1 text-sm">
               <MessageSquareMore
-                className={isColor ? "opacity-80" : "opacity-80"}
+                className={isColor ? "opacity-80" : "opacity-40"}
                 size={20}
               />
               {task.comments.length}
@@ -141,7 +141,7 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
 
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-white dark:bg-primary/10 border-1 border-primary text-primary p-2 rounded-full hover:bg-primary/20 dark:hover:bg-primary/25 transition-colors"
+              className="bg-card dark:bg-primary/10 border-1 border-primary text-primary p-2 rounded-full hover:bg-primary/20 dark:hover:bg-primary/25 transition-colors"
             >
               <Edit2 size={15} />
             </button>

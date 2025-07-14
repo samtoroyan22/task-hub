@@ -7,7 +7,7 @@ export const TASKS: ITask[] = [
     id: "1",
     title: "Travel App User Flow",
     icon: "Plane",
-    color: "bg-violet-400",
+    color: "bg-primary/30 dark:bg-primary",
     dueDate: {
       date: new Date(),
       startTime: setMinutes(setHours(new Date(), 9), 30),
@@ -28,7 +28,7 @@ export const TASKS: ITask[] = [
     id: "2",
     title: "E-commerce Site Redesign",
     icon: "ShoppingBasket",
-    color: "bg-pink-400",
+    color: "bg-pink-200 dark:bg-pink-400",
     dueDate: {
       date: new Date(),
       startTime: setMinutes(setHours(new Date(), 13), 0),
@@ -48,7 +48,7 @@ export const TASKS: ITask[] = [
     id: "3",
     title: "Mobile App Onboarding",
     icon: "TabletSmartphone",
-    color: "bg-yellow-400",
+    color: "bg-lime-200 dark:bg-lime-700",
     dueDate: {
       date: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000),
     },

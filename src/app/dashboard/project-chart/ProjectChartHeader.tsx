@@ -20,14 +20,14 @@ export function ProjectChartHeader({ onRangeChange, selectedRange }: Props) {
       <div className="relative">
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-2xl border border-neutral-200"
+          className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-2xl border border-neutral-200 dark:border-neutral-200/20"
         >
           {selectedRange.label}
           <ChevronDown size={16} />
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 w-35 rounded-2xl bg-white border border-neutral-200 py-1 z-10">
+          <div className="absolute right-0 mt-2 w-35 rounded-2xl bg-white dark:bg-card border dark:border-neutral-200/20  border-neutral-200 py-1 z-10">
             {timeRanges.map((range) => (
               <button
                 key={range.value}
