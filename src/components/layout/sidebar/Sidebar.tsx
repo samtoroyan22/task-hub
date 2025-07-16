@@ -11,39 +11,36 @@ import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { PublicPages } from "@/config/public-pages";
+import { createClient } from "@/utils/supabase/client";
 
-export const Sidebar = observer(() => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export const Sidebar = () => {
   const router = useRouter();
 
-  useEffect(() => {
-    setIsLoggedIn(authStore.isLoggedIn);
-  }, []);
+  async function signOut() {
+    const { error } = await createClient().auth.signOut();
+    if (!error) {
+      router.push(PublicPages.LOGIN);
+    }
+  }
 
   return (
     <aside className="p-5 bg-white dark:bg-neutral-800">
-      {isLoggedIn && (
-        <>
-          <div className="flex items-center justify-between">
-            <SidebarHeading title="Account" />
-            <Button
-              variant="ghost"
-              className="opacity-50 hover:opacity-100 transition-opacity rounded-4xl"
-              onClick={() => {
-                authStore.logout;
-                router.push(PublicPages.LOGIN);
-              }}
-            >
-              <LogOut />
-            </Button>
-          </div>
-          <SidebarProfile />
-        </>
-      )}
+      <div className="flex items-center justify-between">
+        <SidebarHeading title="Account" />
+        <Button
+          variant="ghost"
+          className="opacity-50 hover:opacity-100 transition-opacity rounded-4xl"
+          onClick={signOut}
+        >
+          <LogOut />
+        </Button>
+      </div>
+      <SidebarProfile />
+
       <SidebarHeading title="Main Menu" />
       <SidebarMenu />
       <SidebarHeading title="Projects" />
       <SidebarProjects />
     </aside>
   );
-});
+};
