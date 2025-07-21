@@ -1,9 +1,10 @@
-import { NextResponse, NextRequest } from "next/server";
-import { token } from "./lib/token-service";
-import { PublicPages } from "./config/public-pages";
+import { NextRequest } from "next/server";
+import { updateSession } from "@/utils/supabase/middleware";
 
-export function middleware(request: NextRequest) {
-  const accessToken = request.cookies.get(token.accessToken)?.value;
+export async function middleware(request: NextRequest) {
+  const response = await updateSession(request);
+
+  const accessToken = request.cookies.get("sb-access-token")?.value;
   const isLoggedIn = !!accessToken;
 
   console.log(
@@ -13,13 +14,9 @@ export function middleware(request: NextRequest) {
     isLoggedIn
   );
 
-  if (!isLoggedIn) {
-    return NextResponse.redirect(new URL(PublicPages.LOGIN, request.url));
-  }
-
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  matcher: ["/dashboard", "/dashboard/:path*"],
+  matcher: ["/dashboard", "/dashboard/:path*", "/auth/confirm"],
 };

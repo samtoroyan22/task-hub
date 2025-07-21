@@ -1,37 +1,13 @@
-import type { LucideIcon } from "lucide-react";
-import type { IProfile } from "./profile.types";
-import type { IconName } from "@/utils/icon-map";
+import type { Database } from "@/types/db.types";
 
-export interface ISubTask {
-  id: string;
-  title: string;
-  isCompleted: boolean;
-}
+export type TSubTask = Database["public"]["Tables"]["sub_task"]["Row"];
 
-export interface ITask extends Omit<ISubTask, "isCompleted"> {
-  icon: IconName;
-  color?: string;
-  dueDate: {
-    date: Date;
-    startTime?: Date;
-    endTime?: Date;
-  };
-  users: IProfile[];
-  subTasks: ISubTask[];
-  comments: string[];
-  resources: string[];
-  links: string[];
-}
-
-export interface ITaskWithTime extends ITask {
-  dueDate: {
-    date: Date;
-    startTime: Date;
-    endTime: Date;
-  };
-}
+export type TTask = Database["public"]["Tables"]["task"]["Row"] & {
+  sub_task?: TSubTask[];
+};
 
 export type TTaskStatus = "not-started" | "in-progress" | "completed";
 export type TTaskSortBy = "asc" | "desc";
-export type TTaskFormData = Pick<ITask, "title" | "icon" | "dueDate">;
-export type TSubTaskFormData = Pick<ITask, "title">;
+
+export type TTaskFormData = Pick<TTask, "title" | "icon" | "due_date">;
+export type TSubTaskFormData = Pick<TSubTask, "title">;

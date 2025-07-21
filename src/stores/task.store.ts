@@ -1,17 +1,16 @@
 import { TASKS } from "@/app/dashboard/last-tasks/last-tasks.data";
 import type {
-  ITask,
+  TTask,
   TTaskFormData,
   TSubTaskFormData,
   TTaskStatus,
   TTaskSortBy,
-  ITaskWithTime,
 } from "@/types/task.types";
 import { isToday } from "date-fns";
 import { makeAutoObservable } from "mobx";
 
 class TaskStore {
-  tasks: ITask[] = TASKS;
+  tasks: TTask[] = TASKS;
   status: TTaskStatus | null = null;
   sortByDueDate: TTaskSortBy = "asc";
 
@@ -19,17 +18,19 @@ class TaskStore {
     makeAutoObservable(this);
   }
 
-  getTaskById(id: string): ITask | undefined {
+  loadStoreFromServer(tasks: TTask[]): void {
+    this.tasks = tasks;
+  }
+
+  getTaskById(id: string): TTask | undefined {
     return this.tasks.find((task) => task.id === id);
   }
 
   get todayTasks() {
     return this.tasks.filter((task) => {
-      const taskDate = new Date(task.dueDate.date);
-      return (
-        isToday(taskDate) && task.dueDate.startTime && task.dueDate.endTime
-      );
-    }) as ITaskWithTime[];
+      const taskDate = new Date(task.due_date);
+      return isToday(taskDate) && task.start_time && task.end_time;
+    }) as TTask[];
   }
 
   updateTask(id: string, updateTask: TTaskFormData): void {
@@ -41,14 +42,14 @@ class TaskStore {
   addSubTask(taskId: string, subTask: TSubTaskFormData): void {
     const task = this.getTaskById(taskId);
     if (!task) return;
-    if (!task.subTasks) {
-      task.subTasks = [];
+    if (!task.sub_task) {
+      task.sub_task = [];
     }
-    task.subTasks.push({
-      id: crypto.randomUUID(),
-      title: subTask.title,
-      isCompleted: false,
-    });
+    // task.sub_task.push({
+    //   id: crypto.randomUUID(),
+    //   title: subTask.title,
+    //   is_completed: false,
+    // });
   }
 
   setStatus(status: TTaskStatus | null): void {
@@ -59,17 +60,17 @@ class TaskStore {
     this.sortByDueDate = sortBy;
   }
 
-  get filteredTasks(): ITask[] {
+  get filteredTasks(): TTask[] {
     let filtered = this.tasks;
     if (this.status) {
       filtered = filtered.filter((task) => {
         switch (this.status) {
           case "not-started":
-            return task.subTasks.every((subTask) => !subTask.isCompleted);
+            return task?.sub_task?.every((subTask) => !subTask.completed);
           case "in-progress":
-            return task.subTasks.some((subTask) => !subTask.isCompleted);
+            return task?.sub_task?.some((subTask) => !subTask.completed);
           case "completed":
-            return task.subTasks.every((subTask) => subTask.isCompleted);
+            return task?.sub_task?.every((subTask) => subTask.completed);
           default:
             return true;
         }
@@ -77,8 +78,8 @@ class TaskStore {
     }
 
     return filtered.slice().sort((a, b) => {
-      const dateA = new Date(a.dueDate.date).getTime();
-      const dateB = new Date(b.dueDate.date).getTime();
+      const dateA = new Date(a.due_date).getTime();
+      const dateB = new Date(b.due_date).getTime();
 
       if (this.sortByDueDate === "asc") {
         return dateA - dateB;

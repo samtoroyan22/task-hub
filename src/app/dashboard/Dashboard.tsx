@@ -7,6 +7,9 @@ import { ProjectStats } from "./project-stats/ProjectStats";
 import { ProjectStatisticChart } from "./project-chart/ProjectStatisticChart";
 import { LastTasks } from "./last-tasks/LastTasks";
 import { TasksTimeline } from "@/components/tasks-timeline/TasksTimeline";
+import { taskStore } from "@/stores/task.store";
+import type { TTask } from "@/types/task.types";
+import { useEffect } from "react";
 
 const DynamicThemeToggle = dynamic(
   () =>
@@ -16,7 +19,11 @@ const DynamicThemeToggle = dynamic(
   { ssr: false }
 );
 
-export function Dashboard() {
+export function Dashboard({ tasks }: { tasks: TTask[] }) {
+  useEffect(() => {
+    taskStore.loadStoreFromServer(tasks);
+  }, []);
+
   return (
     <div className="grid grid-cols-[2.7fr_1fr]">
       <div>

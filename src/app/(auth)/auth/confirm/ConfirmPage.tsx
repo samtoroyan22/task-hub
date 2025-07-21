@@ -13,16 +13,31 @@ export function ConfirmPage() {
   useEffect(() => {
     const verifyToken = async () => {
       const token_hash = params.get("token_hash");
-      if (!token_hash) {
+      const type = params.get("type") as "email" | "magiclink";
+
+      if (!token_hash || !type) {
         return router.replace(PublicPages.LOGIN);
       }
 
-      const { error } = await createClient().auth.verifyOtp({
-        type: "email",
+      const supabase = createClient();
+
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        type,
         token_hash,
       });
 
-      if (error) return router.replace(PublicPages.LOGIN);
+      if (verifyError) {
+        console.error("OTP verification failed:", verifyError);
+        return router.replace(PublicPages.LOGIN);
+      }
+
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+
+      if (sessionError || !sessionData.session) {
+        console.error("Session retrieval failed:", sessionError);
+        return router.replace(PublicPages.LOGIN);
+      }
 
       router.replace(DashboardPages.BASE);
     };

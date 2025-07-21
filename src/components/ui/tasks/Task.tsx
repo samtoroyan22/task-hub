@@ -1,13 +1,12 @@
 "use client";
 
-import type { ITask } from "@/types/task.types";
+import type { TTask } from "@/types/task.types";
 import {
   Edit2,
   Link,
   Image as LucideImage,
   MessageSquareMore,
 } from "lucide-react";
-import Image from "next/image";
 import { ProgressBar } from "../ProgressBar";
 import { TaskEditModal } from "./TaskEditModal";
 import { useMemo, useState } from "react";
@@ -18,7 +17,7 @@ import { format, isToday } from "date-fns";
 import { cn } from "@/utils";
 
 interface Props {
-  task: ITask;
+  task: TTask;
   isColor?: boolean;
   isMinimal?: boolean;
 }
@@ -27,20 +26,20 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const progress = Math.round(
-    (task.subTasks.filter((sub) => sub.isCompleted).length /
-      task.subTasks.length) *
+    ((task?.sub_task?.filter((sub) => sub.completed).length || 0) /
+      (task?.sub_task?.length || 0)) *
       100
   );
 
-  const Icon = ICON_MAP[task.icon];
+  const Icon = ICON_MAP[task.icon as keyof typeof ICON_MAP];
 
   const dueDate = useMemo(
     () =>
-      isToday(task.dueDate.date)
+      isToday(task.due_date)
         ? "Today"
-        : Math.ceil((+task.dueDate.date - Date.now()) / (1000 * 60 * 60 * 24)) +
+        : Math.ceil((+task.due_date - Date.now()) / (1000 * 60 * 60 * 24)) +
           " days",
-    [task.dueDate.date]
+    [task.due_date]
   );
 
   return (
@@ -76,8 +75,8 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
               >
                 {isMinimal ? (
                   <>
-                    {format(task.dueDate.startTime!, "h:m a")} -{" "}
-                    {format(task.dueDate.endTime!, "h:m a")}
+                    {format(task.start_time!, "h:m a")} -{" "}
+                    {format(task.end_time!, "h:m a")}
                   </>
                 ) : (
                   <>Due: {dueDate}</>
@@ -87,7 +86,7 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
           </div>
         </div>
         <div className="flex items-center -space-x-3">
-          {task.users.map((user) => (
+          {/* {task.users.map((user) => (
             <div key={user.id} className="">
               <Image
                 src={user.avatarPath || ""}
@@ -97,7 +96,7 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
                 className="rounded-full border-2 border-white dark:border-neutral-800"
               />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
 
@@ -115,21 +114,21 @@ export const Task = observer(({ task, isColor, isMinimal }: Props) => {
                 className={isColor ? "opacity-80" : "opacity-40"}
                 size={20}
               />
-              {task.comments.length}
+              {/* {task.comments.length} */}
             </span>
             <span className="flex items-center gap-1 text-sm">
               <LucideImage
                 className={isColor ? "opacity-80" : "opacity-40"}
                 size={20}
               />
-              {task.subTasks.length}
+              {task?.sub_task?.length}
             </span>
             <span className="flex items-center gap-1 text-sm">
               <Link
                 className={isColor ? "opacity-80" : "opacity-40"}
                 size={20}
               />
-              {task.links.length}
+              {/* {task.links.length} */}
             </span>
           </div>
 
