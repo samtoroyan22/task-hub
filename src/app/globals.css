@@ -152,3 +152,9 @@ button {
     background-color: var(--bg-color);
   }
 }
+
+@media (max-height: 730px) {
+  .chat-header-image {
+    display: none;
+  }
+}

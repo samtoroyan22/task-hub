@@ -10,6 +10,7 @@ import { TasksTimeline } from "@/components/tasks-timeline/TasksTimeline";
 import { taskStore } from "@/stores/task.store";
 import type { TTask } from "@/types/task.types";
 import { useEffect } from "react";
+import { Chat } from "./chat/Chat";
 
 const DynamicThemeToggle = dynamic(
   () =>
@@ -25,8 +26,9 @@ export function Dashboard({ tasks }: { tasks: TTask[] }) {
   }, []);
 
   return (
-    <div className="grid grid-cols-[2.7fr_1fr]">
-      <div>
+    <div className="grid h-screen grid-cols-[3.5fr_1fr] overflow-hidden">
+      {/* Левая часть — скролл */}
+      <div className="p-5 overflow-y-auto h-screen">
         <div className="flex items-center justify-between mb-6">
           <Heading>Dashboard</Heading>
           <div className="flex items-baseline justify-between gap-3">
@@ -45,7 +47,10 @@ export function Dashboard({ tasks }: { tasks: TTask[] }) {
         <TasksTimeline />
       </div>
 
-      <div className="p-5  h-screen flex items-center justify-center">CHAT</div>
+      {/* Правая часть — фиксированный чат */}
+      <div className="h-screen sticky top-0 border-l border-white/10">
+        <Chat />
+      </div>
     </div>
   );
 }
