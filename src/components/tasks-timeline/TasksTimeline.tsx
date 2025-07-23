@@ -1,29 +1,35 @@
-import { taskStore } from "@/stores/task.store";
-import { observer } from "mobx-react-lite";
 import Image from "next/image";
 import { Task } from "../ui/tasks/Task";
 import { getHours, getMinutes } from "date-fns";
+import type { TTask } from "@/types/task.types";
+import { parseTime } from "@/utils/parse-time";
 
 const HOURS = Array.from({ length: 9 }, (_, i) => i + 9);
 
-export const TasksTimeline = observer(() => {
-  const todayTasks = taskStore.todayTasks;
+interface Props {
+  tasks: TTask[];
+}
+
+export const TasksTimeline = ({ tasks }: Props) => {
   const users = [
     ...new Map(
-      todayTasks.flatMap((task) => task.users).map((user) => [user.id, user])
+      tasks
+        .flatMap((task) => task.task_participants)
+        .filter((u) => Boolean(u?.profile))
+        .map((user) => [user?.profile.id, user])
     ).values(),
   ];
 
   return (
     <div className="bg-card rounded-xl p-5">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 ">
         <h2 className="text-xl font-medium">Today Tasks</h2>
         <div className="flex items-center -space-x-3">
           {users.map((user) => (
-            <div key={user.id}>
+            <div key={user.profile.id}>
               <Image
-                src={user.avatarPath || ""}
-                alt={user.name}
+                src={user.profile.avatar_path || ""}
+                alt={user.profile.avatar_path || ""}
                 width={45}
                 height={45}
                 className="rounded-full border-2 border-white dark:border-neutral-800"
@@ -47,12 +53,19 @@ export const TasksTimeline = observer(() => {
       </div>
 
       <div className="h-72 relative">
-        {todayTasks.map((task) => {
-          const start = getHours(task.dueDate.startTime);
-          const end = getHours(task.dueDate.endTime);
+        {tasks.map((task) => {
+          if (!task.start_time || !task.end_time) {
+            return null;
+          }
 
-          const startMinutes = getMinutes(task.dueDate.startTime);
-          const endMinutes = getMinutes(task.dueDate.endTime);
+          const correctStartTime = parseTime(task.due_date, task.start_time);
+          const correctEndTime = parseTime(task.due_date, task.end_time);
+
+          const start = getHours(correctStartTime);
+          const end = getHours(correctEndTime);
+
+          const startMinutes = getMinutes(correctStartTime);
+          const endMinutes = getMinutes(correctEndTime);
 
           const totalMinutes = (17 - 9) * 60;
 
@@ -79,4 +92,4 @@ export const TasksTimeline = observer(() => {
       </div>
     </div>
   );
-});
+};

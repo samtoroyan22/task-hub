@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import { Dashboard } from "./Dashboard";
-import { taskServerGetAll } from "@/services/tasks/task-server.service";
+import {
+  getServerTodayTasks,
+  getServerTasks,
+} from "@/services/tasks/task-server.service";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
 
 export default async function Page() {
-  const tasks = await taskServerGetAll();
+  const [tasks, todayTasks] = await Promise.all([
+    getServerTasks(),
+    getServerTodayTasks(),
+  ]);
 
-  if (tasks.error) {
-    return <div className="text-red-500">Failed to load tasks</div>;
-  }
-
-  return <Dashboard tasks={tasks.data} />;
+  return (
+    <Dashboard tasks={tasks.data || []} todayTasks={todayTasks.data || []} />
+  );
 }

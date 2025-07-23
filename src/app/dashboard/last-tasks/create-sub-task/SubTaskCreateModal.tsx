@@ -13,14 +13,32 @@ import { taskStore } from "@/stores/task.store";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { createClientSubTask } from "@/services/tasks/task-client.service";
 
 interface Props {
   taskId: string;
   onClose: () => void;
 }
 
-export const SubTaskCreateModal = observer(({ taskId, onClose }: Props) => {
+export const SubTaskCreateModal = ({ taskId, onClose: closeModal }: Props) => {
   const [title, setTitle] = useState("");
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["addSubTask", taskId],
+    mutationFn: () => createClientSubTask(taskId, { title }),
+    onSuccess: () => {
+      toast.success("Subtask added successfully");
+      setTitle("");
+      closeModal();
+    },
+    onError: (error) => {
+      toast.error("Failed to add sub task", {
+        id: "subtask-add-error",
+        description: error as unknown as string,
+      });
+    },
+  });
 
   const handleAdd = () => {
     if (!title.trim()) {
@@ -30,10 +48,7 @@ export const SubTaskCreateModal = observer(({ taskId, onClose }: Props) => {
       return;
     }
 
-    taskStore.addSubTask(taskId, { title });
-    toast.success("Subtask added successfully");
-    setTitle("");
-    onClose();
+    mutate();
   };
   return (
     <div>
@@ -53,10 +68,12 @@ export const SubTaskCreateModal = observer(({ taskId, onClose }: Props) => {
               onChange={(e) => setTitle(e.target.value)}
               className="flex-1"
             />
-            <Button onClick={handleAdd}>Save</Button>
+            <Button onClick={handleAdd} disabled={isPending}>
+              {isPending ? "Adding..." : "Add"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
     </div>
   );
-});
+};

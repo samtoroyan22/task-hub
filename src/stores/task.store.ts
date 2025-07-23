@@ -1,16 +1,16 @@
-import { TASKS } from "@/app/dashboard/last-tasks/last-tasks.data";
 import type {
   TTask,
   TTaskFormData,
   TSubTaskFormData,
   TTaskStatus,
   TTaskSortBy,
+  TGetTasksResponse,
 } from "@/types/task.types";
 import { isToday } from "date-fns";
 import { makeAutoObservable } from "mobx";
 
 class TaskStore {
-  tasks: TTask[] = TASKS;
+  tasks: TGetTasksResponse = [];
   status: TTaskStatus | null = null;
   sortByDueDate: TTaskSortBy = "asc";
 
@@ -18,11 +18,11 @@ class TaskStore {
     makeAutoObservable(this);
   }
 
-  loadStoreFromServer(tasks: TTask[]): void {
+  loadStoreFromServer(tasks: TGetTasksResponse): void {
     this.tasks = tasks;
   }
 
-  getTaskById(id: string): TTask | undefined {
+  getTaskById(id: string): TGetTasksResponse[0] | undefined {
     return this.tasks.find((task) => task.id === id);
   }
 
@@ -62,6 +62,7 @@ class TaskStore {
 
   get filteredTasks(): TTask[] {
     let filtered = this.tasks;
+    console.log(filtered);
     if (this.status) {
       filtered = filtered.filter((task) => {
         switch (this.status) {

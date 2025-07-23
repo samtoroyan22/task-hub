@@ -2,10 +2,16 @@
 
 import { createClientFromServer } from "@/utils/supabase/server";
 
-export async function taskServerGetAll() {
-  console.log(
-    (await (await createClientFromServer()).auth.getUser()).data.user
-  );
+export async function getServerTasks() {
+  return (await createClientFromServer())
+    .from("task")
+    .select(`*, sub_task(*), task_participants(profile(*))`);
+}
 
-  return (await createClientFromServer()).from("task").select(`*, sub_task(*)`);
+export async function getServerTodayTasks() {
+  const client = await createClientFromServer();
+  return client
+    .from("task")
+    .select(`*, sub_task(*)`)
+    .eq("due_date", new Date().toISOString().split("T")[0]);
 }
