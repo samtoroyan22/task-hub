@@ -7,12 +7,10 @@ import { ProjectStats } from "./project-stats/ProjectStats";
 import { ProjectStatisticChart } from "./project-chart/ProjectStatisticChart";
 import { LastTasks } from "./last-tasks/LastTasks";
 import { TasksTimeline } from "@/components/tasks-timeline/TasksTimeline";
-import { taskStore } from "@/stores/task.store";
 import type {
   TGetTasksResponse,
   TGetTodayTasksResponse,
 } from "@/types/task.types";
-import { useEffect } from "react";
 import { Chat } from "./chat/Chat";
 
 const DynamicThemeToggle = dynamic(
@@ -29,10 +27,6 @@ interface Props {
 }
 
 export function Dashboard({ tasks, todayTasks }: Props) {
-  useEffect(() => {
-    taskStore.loadStoreFromServer(tasks);
-  }, []);
-
   return (
     <div className="grid h-screen grid-cols-[3.5fr_1fr] overflow-hidden">
       <div className="p-5 overflow-y-auto h-screen">
@@ -49,7 +43,7 @@ export function Dashboard({ tasks, todayTasks }: Props) {
           <ProjectStatisticChart />
         </div>
 
-        <LastTasks />
+        <LastTasks tasks={tasks} />
 
         <TasksTimeline tasks={todayTasks} />
       </div>

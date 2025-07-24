@@ -1,15 +1,8 @@
+"use client";
+
 import { observer } from "mobx-react-lite";
 import { Plus } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useState } from "react";
-import { taskStore } from "@/stores/task.store";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,10 +11,10 @@ import { createClientSubTask } from "@/services/tasks/task-client.service";
 
 interface Props {
   taskId: string;
-  onClose: () => void;
 }
 
-export const SubTaskCreateModal = ({ taskId, onClose: closeModal }: Props) => {
+export const SubTaskCreateModal = observer(({ taskId }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
 
   const { mutate, isPending } = useMutation({
@@ -30,7 +23,7 @@ export const SubTaskCreateModal = ({ taskId, onClose: closeModal }: Props) => {
     onSuccess: () => {
       toast.success("Subtask added successfully");
       setTitle("");
-      closeModal();
+      setIsOpen(false);
     },
     onError: (error) => {
       toast.error("Failed to add sub task", {
@@ -50,30 +43,53 @@ export const SubTaskCreateModal = ({ taskId, onClose: closeModal }: Props) => {
 
     mutate();
   };
+
   return (
-    <div>
-      <Dialog>
-        <DialogTrigger className="bg-primary border border-primary hover:bg-primary/80 text-white transition-colors p-2 rounded-full">
-          <Plus size={15} />
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create a subtask</DialogTitle>
-            <DialogDescription></DialogDescription>
-          </DialogHeader>
-          <div className="flex items-center gap-2 mt-4">
-            <Input
-              placeholder="Subtask title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="flex-1"
-            />
-            <Button onClick={handleAdd} disabled={isPending}>
-              {isPending ? "Adding..." : "Add"}
-            </Button>
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-primary border border-primary hover:bg-primary/80 text-white transition-colors p-2 rounded-full"
+      >
+        <Plus size={15} />
+      </button>
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
+          <div
+            className="mx-4 max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-lg bg-white p-6 dark:bg-gray-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold">Create a Subtask</h2>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className="text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <div className="space-y-6">
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="Subtask title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="flex-1"
+                />
+                <Button onClick={handleAdd} disabled={isPending}>
+                  {isPending ? "Adding..." : "Add"}
+                </Button>
+              </div>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+        </div>
+      )}
+    </>
   );
-};
+});

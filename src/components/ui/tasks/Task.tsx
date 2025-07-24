@@ -137,10 +137,7 @@ export const Task = ({ task, isColor, isMinimal }: Props) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <SubTaskCreateModal
-              taskId={task.id}
-              onClose={() => setIsModalOpen(false)}
-            />
+            <SubTaskCreateModal taskId={task.id} />
 
             <button
               onClick={() => setIsModalOpen(true)}

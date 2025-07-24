@@ -24,7 +24,7 @@ export const Sidebar = () => {
   }
 
   return (
-    <aside className="p-5 bg-white dark:bg-neutral-800">
+    <aside className="p-4 bg-white dark:bg-neutral-800">
       <div className="flex items-center justify-between">
         <SidebarHeading title="Account" />
         <Button

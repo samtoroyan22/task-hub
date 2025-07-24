@@ -28,7 +28,7 @@ import { taskStore } from "@/stores/task.store";
 import { observer } from "mobx-react-lite";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   taskClientGetById,
   taskClientUpdate,
@@ -50,10 +50,7 @@ export const TaskEditModal = observer(
     });
 
     useEffect(() => {
-      if (!isSuccess || !data) {
-        toast.error("Task not found");
-        return;
-      }
+      if (!data) return;
 
       form.reset({
         title: data.title,
@@ -62,6 +59,8 @@ export const TaskEditModal = observer(
       });
     }, [isSuccess]);
 
+    const queryClient = useQueryClient();
+
     const { mutate, isPending } = useMutation({
       mutationKey: ["task", "update", id],
       mutationFn: (data: Database["public"]["Tables"]["task"]["Update"]) =>
@@ -69,6 +68,7 @@ export const TaskEditModal = observer(
       onSuccess: () => {
         toast.success("Task updated successfully");
         closeModal();
+        // queryClient.invalidateQueries({ queryKey: [""] });
       },
       onError: () => {
         toast.error("Failed to update task");
