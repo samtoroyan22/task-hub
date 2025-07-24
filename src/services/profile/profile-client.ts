@@ -1,4 +1,4 @@
-"use client";
+"use cliert";
 
 import { createClient } from "@/utils/supabase/client";
 

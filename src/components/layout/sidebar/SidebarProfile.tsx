@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useQuery } from "@tanstack/react-query";
-import { getProfile } from "@/services/profile/profile-client.service";
+import { getServerProfile } from "@/services/profile/profile-server.service";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
@@ -18,7 +18,7 @@ export function SidebarProfile() {
 
   const { data, isPending } = useQuery({
     queryKey: ["profile"],
-    queryFn: getProfile,
+    queryFn: getServerProfile,
   });
 
   if (!mounted) return null;

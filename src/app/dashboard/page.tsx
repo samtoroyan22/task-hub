@@ -4,6 +4,7 @@ import {
   getServerTodayTasks,
   getServerTasks,
 } from "@/services/tasks/task-server.service";
+import { getServerProfile } from "@/services/profile/profile-server.service";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -15,7 +16,13 @@ export default async function Page() {
     getServerTodayTasks(),
   ]);
 
+  const data = await getServerProfile();
+
   return (
-    <Dashboard tasks={tasks.data || []} todayTasks={todayTasks.data || []} />
+    <Dashboard
+      tasks={tasks.data || []}
+      todayTasks={todayTasks.data || []}
+      userId={data.id}
+    />
   );
 }

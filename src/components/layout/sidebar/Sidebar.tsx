@@ -1,12 +1,9 @@
 "use client";
 
-import { observer } from "mobx-react-lite";
 import { SidebarHeading } from "./SidebarHeading";
 import { SidebarMenu } from "./SidebarMenu";
 import { SidebarProfile } from "./SidebarProfile";
 import { SidebarProjects } from "./SidebarProjects";
-import { authStore } from "@/stores/auth.store";
-import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";

@@ -24,9 +24,10 @@ const DynamicThemeToggle = dynamic(
 interface Props {
   tasks: TGetTasksResponse;
   todayTasks: TGetTodayTasksResponse;
+  userId: string;
 }
 
-export function Dashboard({ tasks, todayTasks }: Props) {
+export function Dashboard({ tasks, todayTasks, userId }: Props) {
   return (
     <div className="grid h-screen grid-cols-[3.5fr_1fr] overflow-hidden">
       <div className="p-5 overflow-y-auto h-screen">
@@ -48,7 +49,7 @@ export function Dashboard({ tasks, todayTasks }: Props) {
         <TasksTimeline tasks={todayTasks} />
       </div>
       <div className="h-screen sticky top-0 border-l border-white/10">
-        <Chat />
+        <Chat userId={userId} />
       </div>
     </div>
   );
