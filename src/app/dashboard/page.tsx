@@ -5,16 +5,22 @@ import {
   getServerTasks,
 } from "@/services/tasks/task-server.service";
 import { getServerProfile } from "@/services/profile/profile-server.service";
+import { getServerProjectStats } from "@/services/statistics/project-stat-server.service";
+import { getServerProjectChartData } from "@/services/statistics/chart/project-chart-server.service";
 
 export const metadata: Metadata = {
   title: "Dashboard",
 };
 
 export default async function Page() {
-  const [tasks, todayTasks] = await Promise.all([
-    getServerTasks(),
-    getServerTodayTasks(),
-  ]);
+  const [tasks, todayTasks, projectStats, projectChartData] = await Promise.all(
+    [
+      getServerTasks(),
+      getServerTodayTasks(),
+      getServerProjectStats(),
+      getServerProjectChartData("yearly"),
+    ]
+  );
 
   const data = await getServerProfile();
 
@@ -23,6 +29,8 @@ export default async function Page() {
       tasks={tasks.data || []}
       todayTasks={todayTasks.data || []}
       userId={data.id}
+      projectStats={projectStats.data || []}
+      projectChartData={projectChartData.data || []}
     />
   );
 }

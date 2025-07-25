@@ -12,6 +12,10 @@ import type {
   TGetTodayTasksResponse,
 } from "@/types/task.types";
 import { Chat } from "./chat/Chat";
+import type {
+  TGetProjectChartDataResponse,
+  TGetProjectStatsResponse,
+} from "@/types/statistic.types";
 
 const DynamicThemeToggle = dynamic(
   () =>
@@ -25,9 +29,17 @@ interface Props {
   tasks: TGetTasksResponse;
   todayTasks: TGetTodayTasksResponse;
   userId: string;
+  projectStats: TGetProjectStatsResponse;
+  projectChartData: TGetProjectChartDataResponse;
 }
 
-export function Dashboard({ tasks, todayTasks, userId }: Props) {
+export function Dashboard({
+  tasks,
+  todayTasks,
+  userId,
+  projectStats,
+  projectChartData,
+}: Props) {
   return (
     <div className="grid h-screen grid-cols-[3.5fr_1fr] overflow-hidden">
       <div className="p-5 overflow-y-auto h-screen">
@@ -40,8 +52,8 @@ export function Dashboard({ tasks, todayTasks, userId }: Props) {
         </div>
 
         <div className="grid grid-cols-[25%_75%] gap-6 mb-8">
-          <ProjectStats />
-          <ProjectStatisticChart />
+          <ProjectStats projectStats={projectStats} />
+          <ProjectStatisticChart projectChartData={projectChartData} />
         </div>
 
         <LastTasks tasks={tasks} />
