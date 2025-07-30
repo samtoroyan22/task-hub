@@ -1,5 +1,4 @@
 import type { TGetProjectStatsResponse } from "@/types/statistic.types";
-import { PROJECT_STATS_DATA } from "../data/project-stats.data";
 import { ProjectStatCard } from "./ProjectStatCard";
 
 interface Props {

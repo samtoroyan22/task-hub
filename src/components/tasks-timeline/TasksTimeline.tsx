@@ -3,6 +3,9 @@ import { Task } from "../ui/tasks/Task";
 import { getHours, getMinutes } from "date-fns";
 import type { TTask } from "@/types/task.types";
 import { parseTime } from "@/utils/parse-time";
+import { currentHour, currentTimeLinePercent } from "./currnet-time-line";
+import { cn } from "@/utils";
+import TimelineCard from "./TimelineCard";
 
 const HOURS = Array.from({ length: 9 }, (_, i) => i + 9);
 
@@ -44,7 +47,10 @@ export const TasksTimeline = ({ tasks }: Props) => {
           {HOURS.map((hour) => (
             <div
               key={hour}
-              className="text-center text-sm font-medium opacity-50"
+              className={cn(
+                "text-center text-sm font-medium opacity-50",
+                hour === currentHour ? "text-primary" : ""
+              )}
             >
               {hour > 12 ? `${hour - 12}:00 pm` : `${hour}:00 am`}
             </div>
@@ -53,41 +59,13 @@ export const TasksTimeline = ({ tasks }: Props) => {
       </div>
 
       <div className="h-72 relative">
+        <div
+          className="bg-primary/50 absolute top-2 bottom-0 w-0.5"
+          style={{ left: currentTimeLinePercent + "%" }}
+        />
+
         {tasks.map((task) => {
-          if (!task.start_time || !task.end_time) {
-            return null;
-          }
-
-          const correctStartTime = parseTime(task.due_date, task.start_time);
-          const correctEndTime = parseTime(task.due_date, task.end_time);
-
-          const start = getHours(correctStartTime);
-          const end = getHours(correctEndTime);
-
-          const startMinutes = getMinutes(correctStartTime);
-          const endMinutes = getMinutes(correctEndTime);
-
-          const totalMinutes = (17 - 9) * 60;
-
-          const startTotalMinutes = (start - 9) * 60 + startMinutes;
-          const endTotalMinutes = (end - 9) * 60 + endMinutes;
-
-          const startPercent = (startTotalMinutes / totalMinutes) * 100;
-          const widthPercent =
-            ((endTotalMinutes - startTotalMinutes) / totalMinutes) * 100;
-
-          return (
-            <div
-              key={task.id}
-              className="absolute top-8"
-              style={{
-                left: `${startPercent}%`,
-                width: `${widthPercent}%`,
-              }}
-            >
-              <Task task={task} isColor isMinimal />
-            </div>
-          );
+          return <TimelineCard key={task.id} task={task} />;
         })}
       </div>
     </div>

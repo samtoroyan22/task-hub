@@ -16,6 +16,7 @@ import type {
   TGetProjectChartDataResponse,
   TGetProjectStatsResponse,
 } from "@/types/statistic.types";
+import { cn } from "@/utils";
 
 const DynamicThemeToggle = dynamic(
   () =>
@@ -51,7 +52,14 @@ export function Dashboard({
           </div>
         </div>
 
-        <div className="grid grid-cols-[25%_75%] gap-6 mb-8">
+        <div
+          className={cn(
+            "grid  gap-6 mb-8",
+            projectChartData.length && !projectStats.length
+              ? "grid-cols-[102%]"
+              : "grid-cols-[25%_75%]"
+          )}
+        >
           <ProjectStats projectStats={projectStats} />
           <ProjectStatisticChart projectChartData={projectChartData} />
         </div>

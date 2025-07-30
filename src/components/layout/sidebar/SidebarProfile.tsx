@@ -55,7 +55,10 @@ export function SidebarProfile() {
                 className="rounded-full shrink-0"
               />
             ) : (
-              <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full" />
+              <div
+                className="w-8 h-8 bg-primary rounded-full "
+                aria-hidden="true"
+              />
             )}
 
             <div className="flex flex-col max-w-[160px] leading-snug overflow-hidden">

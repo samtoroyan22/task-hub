@@ -1,5 +1,4 @@
 import Image from "next/image";
-import type { IProjectStat } from "./project-stats.type";
 import cn from "clsx";
 import { formatMinutes } from "@/utils/format-minutes";
 import type { TGetProjectStatsResponse } from "@/types/statistic.types";
