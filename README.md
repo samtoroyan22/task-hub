@@ -66,7 +66,8 @@ To run this project, you need to have the following installed:
 
 ## Screenshots
 
-Design reference: (./design.png)
+Design reference: 
+![Main screen](./design.png)
 
 ## Troubleshooting
 
